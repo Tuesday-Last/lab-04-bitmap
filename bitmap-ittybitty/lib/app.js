@@ -1,16 +1,15 @@
 'use strict';
-
-const fs = require('fs');
-const bitmap = fs.readFileSync(__dirname +'/../img/bitmap1.bmp');
-
+//
+// const fs = require('fs');
+// const bitmap = fs.readFile('/../img/bitmap1.bmp');
+//
 const AllThatData = module.exports = function (buffer){
-  // file header
   this.headField = buffer.toString('utf8', 0, 2);
   this.size = buffer.readUInt32LE(2);
   this.reservedOne = buffer.readUInt16LE(6);
   this.reservedtwo = buffer.readUInt16LE(8);
   this.pixelArrayStart = buffer.readUInt32LE(10);
-  // dib header
+
   this.headerSize = buffer.readUInt32LE(14);
   this.width = buffer.readUInt32LE(18);
   this.height = buffer.readUInt32LE(22);
@@ -22,8 +21,9 @@ const AllThatData = module.exports = function (buffer){
   this.vertical = buffer.readUInt32LE(42);
   this.numColor = buffer.readUInt32LE(46);
   this.numImpColor = buffer.readUInt32LE(48);
-
   this.paletteStart = (this.pixelArrayStart - this.numColor*4);
+  this.palette = buffer.slice(this.paletteStart, this.pixelArrayStart);
+  this.pixelArray = buffer.slice(this.pixelArrayStart);
 
 };
 
@@ -45,10 +45,13 @@ AllThatData.prototype.toBuffer = function(){
   result.writeInt32LE(this.vertical, 42);
   result.writeInt32LE(this.numColor, 46);
   result.writeInt32LE(this.numImpColor, 48);
+  this.palette.copy(result, this.paletteStart);
+  this.pixelArray.copy(result, this.pixelArrayStart);
 
-  console.log('my buffer', result);
+  console.log('palette copy check:', this.palette.compare(result.slice(this.paletteStart, this.pixelArrayStart)));
+  return result;
 };
-
-const coolImage = new AllThatData(bitmap);
-coolImage.toBuffer();
-console.log(coolImage);
+//
+// const coolImage = new AllThatData(bitmap);
+// coolImage.toBuffer();
+//

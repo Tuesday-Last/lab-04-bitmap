@@ -1,15 +1,19 @@
 'use strict';
 
-const fs = require('fs');
-const handler = require('./lib/handler');
-const app = require('./lib/app');
-const transform = require ('/./lib/transformer');
+const handler = require(__dirname + '/lib/handler');
+const app = require(__dirname + '/lib/app');
+const transformer = require('./lib/transformer');
+const bitmap = __dirname +'/img/bitmap1.bmp';
 
-const colorTx = require ('/./lib/transformer');
+var bufferOne;
+var parsedBitmap;
+var newBitmap;
 
-colorTx(function(err, data){
-  if (err) throw err;
-  console.log('Ta-Daaaa!')
+handler.reader(bitmap, function(err, data){
+  bufferOne = data;
+  parsedBitmap = new app(bufferOne);
+  newBitmap = parsedBitmap;
+  transformer.randomColor(newBitmap.palette);
+  const result = newBitmap.toBuffer();
+  handler.writer(__dirname +'/img/bitmap-end.bmp', result, console.log());
 });
-
-fs.writeFileSync(__dirname + '/../output/' + input + 'newBitmap1.bmp',  bitmap);

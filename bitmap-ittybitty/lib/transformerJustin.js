@@ -1,12 +1,12 @@
 'use strict';
 
 const fs = require('fs');
-const bitmap = fs.readFileSync(__dirname +'/../img/duck.bmp');
+const bitmap = fs.readFileSync(__dirname +'/../img/bitmap1.bmp');
 const AllThatData = module.exports = function (buffer){
 
   // file header
-  this.headField = buffer.toString('utf8', 0, 2);//BM
-  this.size = buffer.readUInt32LE(2);//bytes
+  this.headField = buffer.toString('utf8', 0, 2);
+  this.size = buffer.readUInt32LE(2);
   this.reservedOne = buffer.readUInt16LE(6);
   this.reservedtwo = buffer.readUInt16LE(8);
   this.pixelArrayStart = buffer.readUInt32LE(10);
@@ -36,7 +36,7 @@ const transform = function transform(palette) {
   }
   console.log(palette);
 };
-// transform(coolImage.palette);
+transform(coolImage.palette);
 
 const randomColor = function randomColor(palette){
   for (let i = 0; i < palette.length ; i++) {
@@ -44,38 +44,16 @@ const randomColor = function randomColor(palette){
   }
   console.log(palette);
 };
-// randomColor(coolImage.palette);
+randomColor(coolImage.palette);
 
 const input = process.argv[2];
 const palette = bitmap.slice(this.paletteStart, this.pixelArrayStart);
 
-const flipper = function flipper(palette){
-  for (let i = 0; i < palette.length ; i++) {
-
-    AllThatData.headField = bitmap.toString('utf8', 0, 2);
-    AllThatData.size = bitmap.readUInt32BE(2);
-    AllThatData.reservedOne = bitmap.readUInt16BE(6);
-    AllThatData.reservedtwo = bitmap.readUInt16BE(8);
-    AllThatData.pixelArrayStart = bitmap.readUInt32BE(10);
-    // dib header
-    AllThatData.headerSize = bitmap.readUInt32BE(14);
-    AllThatData.width = bitmap.readUInt32BE(18);
-    AllThatData.height = bitmap.readUInt32BE(22);
-    AllThatData.colorPanes = bitmap.readUInt16BE(26);
-    AllThatData.bitsPerPixel = bitmap.readUInt16BE(28);
-    AllThatData.compressionMethod = bitmap.readUInt32BE(30);
-    AllThatData.imgSize = bitmap.readUInt32BE(34);
-    AllThatData.horizontal = bitmap.readUInt32BE(38);
-    AllThatData.vertical = bitmap.readUInt32BE(42);
-    AllThatData.numColor = bitmap.readUInt32BE(46);
-    AllThatData.numImpColor = bitmap.readUInt32BE(48);
-
-    AllThatData.paletteStart = (AllThatData.pixelArrayStart - AllThatData.numColor*4);
-    AllThatData.palette = bitmap.slice(AllThatData.paletteStart, AllThatData.pixelArrayStart);
-
-  }
-  console.log(palette);
-};
+// const flipper = function flipper(palette){
+//   for (let i = 0; i < palette.length ; i++) {
+//   }
+//   console.log(palette);
+// };
 // flipper(coolImage.palette);
 
 // Should i move <below> to handler.js???
@@ -84,15 +62,14 @@ const flipper = function flipper(palette){
 
 if (input == 'transform'){
   transform(bitmap, palette);
-  return bitmap;
 } else if (input =='randomColor'){
   randomColor(bitmap, palette);
-  return bitmap;
 } else if (input =='flipper'){
   flipper(bitmap, palette);
-  return bitmap;
 } else {
-  console.log('"Please choose your Transformation!"');
+  console.log('Please choose your Transformation!');
+  // return bitmap;
+  // if (null) return cb(null);
 }
 
-fs.writeFileSync(__dirname + '/../outputDuck/' + input + 'newDuck.bmp',  bitmap);
+fs.writeFileSync(__dirname + '/../output/' + input + 'newBitmap1.bmp',  bitmap);

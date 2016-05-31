@@ -11,6 +11,7 @@ describe('Testing the bitmap file handler module', function(){
   describe('testing reader function', function(){
     it('data should exist and be read as true-ish', function(done){
       head.reader(path, function(err, data){
+        //
         expect(data).ok;
         done();
       });
@@ -30,8 +31,9 @@ describe('Testing the bitmap file handler module', function(){
     it('it should create a file', function(done){
       head.writer(endPath, function(err, data){
         fs.access(endPath, fs.F_OK, (err) => {
+          //
+          console.log(data);
           expect(err).not.ok;
-          //De
           done();
         });
       });
